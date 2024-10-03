@@ -75,7 +75,7 @@ public class UserController : ControllerBase
   }
 
   [HttpPost("AddUser")]
-  public IActionResult AddUser(User user)
+  public IActionResult AddUser(UserToAddDto user)
   {
     string sql = @"INSERT INTO TutorialAppSchema.Users(
               [FirstName],
