@@ -1,6 +1,6 @@
 namespace API.Data
 {
-  public class UserRepository
+  public class UserRepository : IUserRepository
   {
     DataContextEF _entityFramework;
 
