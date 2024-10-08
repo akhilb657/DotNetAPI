@@ -1,9 +1,9 @@
 namespace API.Dtos;
 {
-  partial class UserForLoginConfirmationDto
+  public partial class UserForLoginConfirmationDto
   {
-    byte[] PasswordHash {get; set;}
-    byte[] PasswordSalt {get; set;}
+    public byte[] PasswordHash {get; set;}
+    public byte[] PasswordSalt {get; set;}
 
     UserForLoginConfirmationDto()
     {
