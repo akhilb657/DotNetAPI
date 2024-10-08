@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Data;
 using API.Models;
 using API.Dtos;
+using AutoMapper;
 
 namespace API.Controllers;
 

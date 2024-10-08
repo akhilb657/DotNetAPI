@@ -36,7 +36,7 @@ namespace API.Data
       return dbConnection.Execute(sql);
     }
 
-    public bool ExecuteSqlWithParameters(string sql, List<SqlParameters> parameters)
+    public bool ExecuteSqlWithParameters(string sql, List<SqlParameter> parameters)
     {
       SqlCommand commandWithParams = new SqlCommand(sql);
 

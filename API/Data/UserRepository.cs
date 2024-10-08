@@ -31,7 +31,7 @@ namespace API.Data
 
     public void RemoveEntity<T>(T entityToRemove)
     {
-      if(entityToAdd != null)
+      if(entityToRemove != null)
       {
         _entityFramework.Remove(entityToRemove);
       }
