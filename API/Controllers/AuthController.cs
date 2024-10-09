@@ -6,6 +6,9 @@ using System.Text;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace API.Controllers
 {
@@ -109,8 +112,16 @@ namespace API.Controllers
         }
       }
 
+      string userIdSql = @"
+          SELECT UserId FROM TutorialAppSchema.Users WHERE Email = '" + 
+          userForLogin.Email + "'";
 
-      return Ok();
+      int userId = _dapper.LoadDataSingle<int>(userIdSql);
+
+
+      return Ok(new Dictionary<string, string> {
+        {"token", CreateToken(userId)}
+      });
     }
 
     private byte[] GetPasswordHash(string password, byte[] passwordSalt)
@@ -124,6 +135,38 @@ namespace API.Controllers
         iterationCount: 1000000,
         numBytesRequested: 256 / 8
       );
+    }
+
+    private string CreateToken(int userId)
+    {
+      Claim[] claims = new Claim[] {
+        new Claim("userId", userId.ToString())
+      };
+
+      // SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:TokenKey").Value));
+
+      string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
+ 
+      SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(
+              Encoding.UTF8.GetBytes(
+                  tokenKeyString != null ? tokenKeyString : ""
+              )
+          );
+      
+      SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha512Signature);
+
+      SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
+      {
+        Subject = new ClaimsIdentity(claims),
+        SigningCredentials = credentials,
+        Expires = DateTime.Now.AddDays(1)
+      };
+
+      JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+      SecurityToken token = tokenHandler.CreateToken(descriptor);
+
+      return tokenHandler.WriteToken(token);
     }
   }
 }
