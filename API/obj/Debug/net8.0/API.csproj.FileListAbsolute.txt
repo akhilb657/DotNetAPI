@@ -74,3 +74,4 @@ C:\Users\Dell\OneDrive\Desktop\DotNetAPI\API\bin\Debug\net8.0\Microsoft.EntityFr
 C:\Users\Dell\OneDrive\Desktop\DotNetAPI\API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\Dell\OneDrive\Desktop\DotNetAPI\API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\Dell\OneDrive\Desktop\DotNetAPI\API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Users\Dell\OneDrive\Desktop\DotNetAPI\API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

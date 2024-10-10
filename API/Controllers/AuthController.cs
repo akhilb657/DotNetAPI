@@ -9,9 +9,14 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace API.Controllers
 {
+  [Authorize]
+  [ApiController]
+  [Route("[controller]")]
   public class AuthController : ControllerBase
   {
     private readonly DataContextDapper _dapper;
@@ -22,6 +27,7 @@ namespace API.Controllers
       _config = config;
     }
 
+    [AllowAnonymous]
     [HttpPost("Register")]
     public IActionResult Register(UserForRegistrationDto userForRegistration)
     {
@@ -89,7 +95,7 @@ namespace API.Controllers
       
     }
 
-
+    [AllowAnonymous]
     [HttpPost("Login")]
     public IActionResult Login(UserForLoginDto userForLogin)
     {
@@ -121,6 +127,27 @@ namespace API.Controllers
 
       return Ok(new Dictionary<string, string> {
         {"token", CreateToken(userId)}
+      });
+    }
+
+    [HttpGet("RefreshToken")]
+    public IActionResult RefreshToken()
+    {
+      string userId = User.FindFirst("userId")?.Value + "";
+
+      string userIdSql = "SELECT UserId FROM TutorialAppSchema.Users WHERE UserId = " + userId;
+      
+      int userIdFromDB = _dapper.LoadDataSingle<int>(userIdSql);
+
+      // if (string.IsNullOrEmpty(userId))
+      //   {
+      //       return BadRequest("User ID claim missing or invalid token");
+      //   }
+
+      // return CreateToken(userIdFromDB);
+
+      return Ok(new Dictionary<string, string> {
+        {"token", CreateToken(userIdFromDB)}
       });
     }
 
