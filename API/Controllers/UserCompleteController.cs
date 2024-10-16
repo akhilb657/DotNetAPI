@@ -45,19 +45,22 @@ public class UserCompleteController : ControllerBase
     return users;
   }
 
-  [HttpPut("EditUser")]
-  public IActionResult EditUser(User user)
+  [HttpPut("UpsertUser")]
+  public IActionResult UpsertUser(UserComplete user)
   {
     string sql = @"
-      UPDATE TutorialAppSchema.Users
-        SET [FirstName] = '" + user.FirstName + 
-            "', [LastName] = '" + user.LastName +
-            "', [Email] = '" + user.Email + 
-            "', [Gender] = '" + user.Gender + 
-            "', [Active] = '" + user.Active + 
-        "' WHERE UserId = " + user.UserId;
+      EXEC TutorialAppSchema.spUser_Upsert
+        @FirstName = '" + user.FirstName + 
+            "', @LastName = '" + user.LastName +
+            "', @Email = '" + user.Email + 
+            "', @Gender = '" + user.Gender + 
+            "', @Active = '" + user.Active + 
+            "', @JobTitle = '" + user.JobTitle + 
+            "', @Department = '" + user.Department + 
+            "', @Salary = '" + user.Salary + 
+            "', @UserId  = " + user.UserId;
 
-    Console.WriteLine(sql);
+    // Console.WriteLine(sql);
       
     if(_dapper.ExecuteSql(sql))
     {
@@ -66,33 +69,6 @@ public class UserCompleteController : ControllerBase
 
     throw new Exception("Failed to Update User");
     
-  }
-
-  [HttpPost("AddUser")]
-  public IActionResult AddUser(UserToAddDto user)
-  {
-    string sql = @"INSERT INTO TutorialAppSchema.Users(
-              [FirstName],
-              [LastName],
-              [Email],
-              [Gender],
-              [Active]
-          ) VALUES (" + 
-              "'" + user.FirstName + 
-              "', '" + user.LastName +
-              "', '" + user.Email + 
-              "', '" + user.Gender + 
-              "', '" + user.Active + 
-          "')";
-    
-    Console.WriteLine(sql);
-      
-    if(_dapper.ExecuteSql(sql))
-    {
-      return Ok();
-    }
-
-    throw new Exception("Failed to Add User");
   }
 
   [HttpDelete("DeleteUser/{userId}")]
